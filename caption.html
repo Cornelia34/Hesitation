@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>字幕組件</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="scripts/aframe-render-order-component.js"></script>
+    <script src="scripts/aframe-draw-shader.js"></script>
+    <script src="scripts/aframe-video-player.js"></script>
+    <script src="scripts/aframe-attach-to.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="city" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
+            <audio id="narration-audio" preload="auto" src="audios/narration.mp3"></audio>
+            <video id="test-video" preload="auto" muted src="videos/test.mp4"></video>
+        </a-assets>
+
+        <a-sky src="#city"></a-sky>
+
+        <a-camera>
+            <a-cursor></a-cursor>
+            <a-entity id="hud" position="0 0 -0.9"></a-entity>
+        </a-camera>
+
+
+        <!-- 獨立字幕 -->
+        <a-box id="box" position="2 1.6 -3" 
+            proxy-event="event: click; to: #caption-standalone; as: startCaption"
+            event-set="_event: captionEnd; color: #f00;">
+        </a-box>
+
+        <a-plane id="caption-standalone" scale="0.3 0.3 0.3" position="2 0.4 -3" caption="
+                color: #fff; 
+                strokeColor: #000;
+                strokeWidth: 3;
+                backgroundColor: transparent;
+                timeline: [
+                    {'time': 0.0, 'text': '事件觸發字幕！現在時間：0'},
+                    {'time': 1.0, 'text': '事件觸發字幕！現在時間：1'},
+                    {'time': 2.0, 'text': '事件觸發字幕！現在時間：2'},
+                    {'time': 3.0, 'text': '事件觸發字幕！現在時間：3'},
+                    {'time': 4.0, 'text': '事件觸發字幕！現在時間：4'},
+                    {'time': 5.0, 'text': ''}
+                ];
+                startEvent: startCaption;
+                onEndEvent: captionEnd;
+            "
+            proxy-event="event: captionEnd; to: #box;"
+        >
+        </a-plane>
+        
+        <!-- 影片＆字幕 -->
+        <a-video src="#test-video" position="0 2.7 -3" raycastable="true"
+            video-player="playEvent: mouseenter; pauseEvent:mouseleave;"
+            proxy-event="event: mouseenter; to: #caption-video; as: startCaption;">
+        </a-video>
+
+        <a-plane id="caption-video" scale="0.3 0.3 0.3" position="0 2 -3" caption="
+                color: #fff; 
+                strokeWidth: 3;
+                timeline: [
+                    {'time': 0.0, 'text': '影片觸發字幕！現在時間：0'},
+                    {'time': 1.0, 'text': '影片觸發字幕！現在時間：1'},
+                    {'time': 2.0, 'text': '影片觸發字幕！現在時間：2'},
+                    {'time': 3.0, 'text': '影片觸發字幕！現在時間：3'},
+                    {'time': 4.0, 'text': '影片觸發字幕！現在時間：4'},
+                    {'time': 5.0, 'text': ''}
+                ];
+                startEvent: startCaption;
+                bind: #test-video;
+                bindType: video;
+            "
+        >
+        </a-plane>
+
+
+        <!-- 聲音＆字幕（加上追隨視線） -->
+        <a-box id="narration" position="-2 1.6 -3"
+            sound="src: #narration-audio; on: click; positional: false;"
+            proxy-event="event: click; to: #caption-sound; as: startCaption;">
+        </a-box>
+
+        <a-entity attach-to="#hud" render-order="99999">
+            <a-plane id="caption-sound" scale="0.1 0.1 0.1" position="0 -0.2 0" caption="
+                    color: #fff; 
+                    strokeWidth: 3;
+                    timeline: [
+                        {'time': 0.6, 'text': '這是旁白'},
+                        {'time': 1.8, 'text': '同時跟著字幕播放'},
+                        {'time': 4.1, 'text': '最後一句了'},
+                        {'time': 5.7, 'text': ''}
+                    ];
+                    startEvent: startCaption;
+                    bind: #narration;
+                    bindType: audio;
+                "
+            >
+            </a-plane>
+        </a-entity>
+
+
+
+    </a-scene>
+</body>
+
+</html>

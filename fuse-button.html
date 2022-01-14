@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>互動射線raycaster＆凝視式按鈕</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="scripts/aframe-render-order-component.js"></script>
+    <script src="scripts/aframe-draw-shader.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="city" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
+            <audio id="click-se" preload src="audios/click.ogg"></audio>
+        </a-assets>
+
+        <a-sky src="#city"></a-sky>
+
+        <!-- 設定raycaster的白名單為「擁有raycastable組件且組件屬性值為true」的物體（語法是css選擇器） -->
+        <a-camera>
+            <a-cursor cursor="fuse: true; fuseTimeout: 1000" raycaster="objects: [raycastable=true]"></a-cursor>
+        </a-camera>
+
+        <!-- 點擊時無反應（因為不在raycaster的白名單上） -->
+        <a-box id="box1" position="-2 0 -5" event-set="_event: click; color: #d24;"></a-box>
+
+        <!-- 點擊時有反應 -->
+        <a-box id="box2" position="2 0 -5" event-set="_event: click; color: #d24;" raycastable="true"></a-box>
+
+        <!-- 凝視式按鈕，凝視1000毫秒後會觸發click事件，帶動音效播放、傳遞click事件給#box1，並於事件發生後300毫秒後消失 -->
+        <a-plane fuse-button="color: #15031b; barColor: #d24; fuseTimeout: 1000;" 
+            width="3" position="0 5 -10" raycastable="true"
+            sound="src:#click-se; positional:false; on: click;"
+            event-set="_event: click; raycastable: false; visible: false; _delay: 300;"
+            proxy-event="event: click; to: #box1;">
+            <a-plane draw-text="text:按鈕; color: #fff" position="0 0 0.02"></a-plane>
+        </a-plane>
+    </a-scene>
+</body>
+
+</html>

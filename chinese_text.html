@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>顯示中文</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="scripts/aframe-draw-shader.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-sky color="#000"></a-sky>
+
+        <a-plane draw-text="text:一行中文字; color: #d24; strokeColor: #fff; strokeWidth: 2; backgroundColor: #111;" position="0 1.6 -2"></a-plane>
+        <!-- 
+            text: { type: 'string', default: "" },
+            color: { type: 'string', default: "#000" },
+            strokeColor: { type: 'string', default: "#000" },
+            strokeWidth: { type: 'number', default: 0 },
+            backgroundColor: { type: 'string', default: "transparent" } 
+        -->
+    </a-scene>
+</body>
+
+</html>
+
+text: { type: 'string', default: "" },
+color: { type: 'string', default: "#000" },
+strokeColor: { type: 'string', default: "#000" },
+strokeWidth: { type: 'number', default: 0 },
+backgroundColor: { type: 'string', default: "transparent" }

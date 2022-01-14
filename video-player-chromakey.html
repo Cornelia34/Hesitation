@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>影片控制與去背</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="scripts/aframe-video-player.js"></script>
+    <script src="scripts/aframe-chromakey-material.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <video id="video" preload="auto" src="./videos/test.mp4" crossOrigin=""></video>
+        </a-assets>
+
+        <a-camera>
+            <a-cursor color="#fff"></a-cursor>
+        </a-camera>
+
+        <a-sky color="#000"></a-sky>
+
+        <a-video src="#video" position="0 1.6 -1" 
+            chromakey="color: 0.1 0.9 0.2; range: 0.5" 
+            video-player="playEvent:mouseenter; pauseEvent:mouseleave; onPlayEvent: played; onEndEvent: ended;"
+            event-set__on-play="_event: played; scale: 1 1 1;"
+            event-set__on-end="_event: ended; scale: 2 2 2;">
+        </a-video>
+    </a-scene>
+</body>
+
+</html>

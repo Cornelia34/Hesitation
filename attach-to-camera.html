@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>跟隨視線組件</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="scripts/aframe-render-order-component.js"></script>
+    <script src="scripts/aframe-draw-shader.js"></script>
+    <script src="scripts/aframe-attach-to.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="city" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
+        </a-assets>
+
+        <a-sky src="#city"></a-sky>
+
+        <a-camera>
+            <a-cursor></a-cursor>
+            <a-entity id="hud" position="0 0 -0.9"></a-entity>
+        </a-camera>
+
+        <a-entity attach-to="#hud" render-order="99999">
+            <a-plane draw-text="text:跟著; color: #fff" scale="0.1 0.1 0.1" position="0 0.2 0"></a-plane>
+            <a-plane draw-text="text:視線; color: #fff" scale="0.1 0.1 0.1" position="0 -0.2 0"></a-plane>
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>

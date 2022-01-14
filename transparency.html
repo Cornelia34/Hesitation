@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>透明度問題</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="scripts/aframe-render-order-component.js"></script>
+    <script src="scripts/aframe-draw-shader.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="city" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
+        </a-assets>
+
+        <a-sky src="#city"></a-sky>
+
+        <!-- 一個籠罩著攝影機的半透明圓球，某些角度會讓後方有透明度的物體消失（常發生在物體離攝影機很近的時候） -->
+        <a-sky position="0 1.6 0" radius="0.5" material="color: #000; transparent: true; opacity: 0.5;"></a-sky>
+        
+        <!-- 加上render-order組件並設定順位（大一點的數字），會讓此物體較晚繪製，解決該問題 -->
+        <!-- <a-sky position="0 1.6 0" radius="0.5" material="color: #000; transparent: true; opacity: 0.5;" render-order="999"></a-sky> -->
+
+        <a-plane position="0 1.6 -2.5" material="color: #f0f; transparent: true; opacity: 0.5;"></a-plane>
+        <a-plane position="0 1.6 -3" material="color: #fff; transparent: true; opacity: 0.5;"></a-plane>
+        <a-plane position="0 1.6 -3.5" material="color: #ff0;"></a-plane>
+        
+    </a-scene>
+</body>
+
+</html>

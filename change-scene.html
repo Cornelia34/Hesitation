@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>場景切換組件</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="scripts/aframe-render-order-component.js"></script>
+    <script src="scripts/aframe-change-scene.js"></script>
+</head>
+
+<body>
+    <a-scene>
+
+        <a-camera>
+            <a-cursor raycaster="objects: [visible=true] [raycastable=true]"></a-cursor>
+            <a-sky id="fadePanel" render-order="9999" radius="0.3" color="#000" material="transparent: true; opacity: 0.0;"
+                animation__fadeOut="property: material.opacity; startEvents: fadeOut; easing: linear; dur: 500; to: 1.0"
+                animation__fadeIn="property: material.opacity; startEvents: fadeIn; easing: linear; dur: 500; to: 0.0"
+            ></a-sky>
+        </a-camera>
+
+
+        <a-entity id="scene1" scene visible="true">
+            <a-sky color="#0ff"></a-sky>
+            <a-box color="#0f0" position="-1 0 -3" raycastable="true"
+                change-scene="event: click; to: #scene2; fadePanel: #fadePanel;"
+            ></a-box>
+        </a-entity>
+
+        <a-entity id="scene2" scene visible="false">
+            <a-sky color="#f0f"></a-sky>
+            <a-box color="#00f" position="1 0 -3" raycastable="true"
+                change-scene="event: click; to: #scene3; fadePanel: #fadePanel;"
+            ></a-box>
+        </a-entity>
+
+        <a-entity id="scene3" scene visible="false">
+            <a-sky color="#ff0"></a-sky>
+            <a-box color="#f00" position="0 0 -3" raycastable="true"
+                change-scene="event: click; to: #scene1; fadePanel: #fadePanel;"
+            ></a-box>
+        </a-entity>
+
+    </a-scene>
+</body>
+
+</html>

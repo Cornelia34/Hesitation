@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>3D模型與動畫</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-extras@6.1.1/dist/aframe-extras.js"></script>
+</head>
+
+<body>
+    <a-scene renderer="colorManagement: true">
+        <a-assets>
+            <a-asset-item id="room" src="./models/G4-Dark2.glb"></a-asset-item>
+            <a-asset-item id="model" src="./models/CesiumMan.gltf"></a-asset-item>
+            <a-asset-item id="model2" src="./models/model.obj"></a-asset-item>
+            <a-asset-item id="model2-mtl" src="./models/materials.mtl"></a-asset-item>
+        </a-assets>
+
+        <a-gltf-model src="#room"></a-gltf-model>
+        <a-gltf-model src="#model" position="0 0 -2" rotation="0 270 0" animation-mixer></a-gltf-model>
+        <a-obj-model src="#model2" mtl="#model2-mtl" position="-5 2 -2" rotation="0 270 0"></a-obj-model>
+    </a-scene>
+</body>
+
+</html>

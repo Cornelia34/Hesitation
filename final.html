@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>猶豫</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="scripts/aframe-render-order-component.js"></script>
+    <script src="scripts/aframe-video-player.js"></script>
+    <script src="scripts/aframe-draw-shader.js"></script>
+    <script src="scripts/aframe-attach-to.js"></script>
+    <script src="scripts/aframe-maze.js"></script>
+    <script src="scripts/aframe-move-to.js"></script>
+</head>
+
+<body>
+    <a-scene proxy-event="event: enter-vr; to: #narration; as: startNarration;">
+        <a-assets>
+            <img id="city" crossorigin="anonymous" src="images/space2-1.jpg">
+            <img id="wall-color" src="images/Concrete_Wall_007-2_basecolor.jpg"> 
+            <img id="wall-normal" src="images/Concrete_Wall_007_normal.jpg">
+            <img id="floor-color" src="images/Concrete_Wall_007-2_basecolor.jpg"> 
+            <img id="floor-normal" src="images/Concrete_Wall_007_normal.jpg">
+            <audio id="room-bgm" preload src="audios/clock1.mp3"></audio> 
+            <audio id="click-se" preload src="audios/click.ogg"></audio>
+            <video id="test-video" preload="auto" muted src="videos/test.mp4"></video>
+        </a-assets>
+
+        <a-entity id="bgm" sound="src: #room-bgm; autoplay: true; positional: false; loop: true;"></a-entity>
+
+        <a-sky src="#city"></a-sky>
+
+        <a-entity id="cam-rig" position="0 0 12" rotation="0 -90 0">
+            <a-camera wasd-controls="acceleration:200">
+                <a-cursor cursor="fuse: true; fuseTimeout: 1000" raycaster="objects: [raycastable=true]"></a-cursor>
+                <a-entity id="hud" position="0 0 -0.9"></a-entity>
+            </a-camera>
+        </a-entity>
+      
+
+        <a-entity id="maze" maze="
+            map: 
+                00111111111111,
+                00100100100100,
+                11100111100111,
+                00100100100100,
+                00111111111111;
+
+            roomSize: 6 4 6;
+            side: front;
+
+            colors: #fff, #fff, #fff, #fff, #fff, #fff; 
+
+            srcs: #wall-color, 
+                  #wall-color,
+                  #floor-color,
+                  #floor-color,
+                  #wall-color,
+                  #wall-color;
+
+            normalMaps: #wall-normal, 
+                        #wall-normal,
+                        #floor-normal,
+                        #floor-normal,
+                        #wall-normal,
+                        #wall-normal;
+
+            repeats: 1.5 1, 1.5 1, 1.5 1, 1.5 1, 1.5 1, 1.5 1;
+            normalTextureRepeats: 1.5 1, 1.5 1, 1.5 1, 1.5 1, 1.5 1, 1.5 1;
+
+            metalnesses: 0.1, 0.1, 0.1, 0.1, 0.1, 0.1;
+            roughnesses: 0.5, 0.5, 0.5, 0.5, 0.5, 0.5;
+
+            
+        ">
+            <a-plane fuse-button width="2" position="14 2 12" rotation="0 -90 0" raycastable="true"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 12 0 12; time: 3; startEvent: click; onEndEvent: done;"
+                proxy-event="event: done; to: #along1;"
+            >
+                <a-plane draw-text="text:前進; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <!--第二層-->
+            <a-plane id="along1" fuse-button width="2" position="50 2 12" rotation="0 -90 0" raycastable="false"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__done="_event: done; raycastable: true; visible: true; _delay: 8000"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 48 0 12; time: 3; startEvent: click; onEndEvent: done2;"
+                proxy-event="event: done2; to: #along2;"
+            >
+                <a-plane draw-text="text:前進; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <!--第三層-->
+            <a-plane id="along2" fuse-button width="2" position="80 2 12" rotation="0 -90 0" raycastable="false"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__done="_event: done2; raycastable: true; visible: true; _delay: 8000"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 85 0 12; time: 3; startEvent: click;"
+            >
+                <a-plane draw-text="text:前進; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+
+
+            <!--右邊-->
+            <a-plane fuse-button width="2" position="14 2 24" rotation="0 -90 0" raycastable="true"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 30 0 24; time: 3; startEvent: click;"
+            >
+                <a-plane draw-text="text:前進; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <!--右邊直走-->
+            <a-plane fuse-button width="2" position="35 2 24" rotation="0 -90 0" raycastable="true"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 48 0 24; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #right2; visible: true;
+                                animation.property: position; animation.to: 48 2 26; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #right2; visible: false; _delay: 2"  
+            >
+                <a-plane draw-text="text:前進？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane fuse-button width="2" position="50 2 24" rotation="0 -90 0" raycastable="true"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 66 0 24; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #right3; visible: true;
+                                animation.property: position; animation.to: 66 2 26; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #right3; visible: false; _delay: 2" 
+            >
+                <a-plane draw-text="text:前進？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane fuse-button width="2" position="70 2 24" rotation="0 -90 0" raycastable="true"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 85 0 24; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #right4; visible: true;
+                                animation.property: position; animation.to: 80 2 26; animation.dur: 5000;"
+                event-set__done="_event: done; _target: #right4; visible: false; _delay: 1" 
+            >
+                <a-plane draw-text="text:前進？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>            
+            <!--左邊-->
+            <a-plane fuse-button width="2" position="14 2 0" rotation="0 -90 0" raycastable="true"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 30 0 0; time: 3; startEvent: click;"
+            >
+                <a-plane draw-text="text:前進; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <!--左邊直走-->
+            <a-plane fuse-button width="2" position="35 2 0" rotation="0 -90 0" raycastable="true"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 48 0 0; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #left2; visible: true;
+                                animation.property: position; animation.to: 48 2 -2; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #left2; visible: false; _delay: 2"         
+            >
+                <a-plane draw-text="text:前進？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane fuse-button width="2" position="50 2 0" rotation="0 -90 0" raycastable="true"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 66 0 0; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #left3; visible: true;
+                                animation.property: position; animation.to: 66 2 -2; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #left3; visible: false; _delay: 2"
+            >
+                <a-plane draw-text="text:前進？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane fuse-button width="2" position="70 2 0" rotation="0 -90 0" raycastable="true"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 85 0 0; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #left4; visible: true;
+                                animation.property: position; animation.to: 80 2 -2; animation.dur: 5000;"
+                event-set__done="_event: done; _target: #left4; visible: false; _delay: 1"
+            >
+                <a-plane draw-text="text:前進？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            
+            <!--左轉-->
+            <a-plane fuse-button width="2" position="12 2 -2" rotation="0 0 0" raycastable="true" 
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to__1="target: #cam-rig; position: 12 0 0; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #left1; visible: true;
+                                animation.property: position; animation.to: 9.5 2 -1; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #left1; visible: false; _delay: 2"   
+            >
+                <a-plane draw-text="text:左？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+
+            <!--右邊左轉-->
+            <a-plane fuse-button width="2" position="30 2 20" rotation="0 0 0" raycastable="true" 
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to__1="target: #cam-rig; position: 30 0 12; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #right5; visible: true;
+                                animation.property: position; animation.to: 32 2 12; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #right5; visible: false; _delay: 2"
+            >
+                <a-plane draw-text="text:左？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane fuse-button width="2" position="48 2 0" rotation="0 0 0" raycastable="true" 
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to__1="target: #cam-rig; position: 48 0 0; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #right6; visible: true;
+                                animation.property: position; animation.to: 46 2 2; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #right6; visible: false; _delay: 2"
+            >
+                <a-plane draw-text="text:左？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane fuse-button width="2" position="66 2 20" rotation="0 0 0" raycastable="true" 
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to__1="target: #cam-rig; position: 66 0 12; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #right7; visible: true;
+                                animation.property: position; animation.to: 68 2 12; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #right7; visible: false; _delay: 2"
+            >
+                <a-plane draw-text="text:左？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+
+            <!--右轉-->
+            <a-plane fuse-button width="2" position="12 2 26" rotation="0 180 0" raycastable="true"
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to__1="target: #cam-rig; position: 12 0 24; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #right1; visible: true;
+                                animation.property: position; animation.to: 9.5 2 25; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #right1; visible: false; _delay: 2"
+            >
+                <a-plane draw-text="text:右？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <!--左邊右轉-->
+            <a-plane fuse-button width="2" position="30 2 4" rotation="0 180 0" raycastable="true" 
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to__1="target: #cam-rig; position: 30 0 12; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #left5; visible: true;
+                                animation.property: position; animation.to: 32 2 12; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #left5; visible: false; _delay: 2"
+            >
+                <a-plane draw-text="text:右？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane fuse-button width="2" position="48 2 26" rotation="0 180 0" raycastable="true" 
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to__1="target: #cam-rig; position: 48 0 24; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #left6; visible: true;
+                                animation.property: position; animation.to: 46 2 25; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #left6; visible: false; _delay: 2"
+            >
+                <a-plane draw-text="text:右？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane fuse-button width="2" position="66 2 4" rotation="0 180 0" raycastable="true" 
+                sound="src:#click-se; positional:false; on: click;"
+                event-set__click="raycastable: false; visible: false; _delay: 300;"
+                move-to__1="target: #cam-rig; position: 66 0 12; time: 8; startEvent: click; onEndEvent: done;"
+                event-set__why="_event: click; _target: #left7; visible: true;
+                                animation.property: position; animation.to: 68 2 12; animation.dur: 6000;"
+                event-set__done="_event: done; _target: #left7; visible: false; _delay: 2"
+            >
+                <a-plane draw-text="text:右？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            
+
+
+
+
+            <a-plane id="right1" fuse-button width="2" position="9.5 2 16" rotation="0 90 0" visible="false"
+                >
+                <a-plane draw-text="text:左...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+
+
+
+
+            <!--右邊直走-->
+            <a-plane id="right2" fuse-button width="2" position="35 2 26" rotation="0 180 0" visible="false"
+                >
+                <a-plane draw-text="text:左...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane id="right3" fuse-button width="2" position="50 2 26" rotation="0 180 0" visible="false"
+                >
+                <a-plane draw-text="text:左...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane id="right4" fuse-button width="2" position="70 2 26" rotation="0 180 0" visible="false"
+                >
+                <a-plane draw-text="text:左...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <!--右邊左轉-->
+            <a-plane id="right5" fuse-button width="3" position="32 2 20" rotation="0 -90 0" visible="false"
+                >
+                <a-plane draw-text="text:前進...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane id="right6" fuse-button width="3" position="46 2 8" rotation="0 90 0" visible="false"
+                >
+                <a-plane draw-text="text:前進...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane id="right7" fuse-button width="3" position="68 2 20" rotation="0 -90 0" visible="false"
+                >
+                <a-plane draw-text="text:前進...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            
+            <a-plane id="left1" fuse-button width="2" position="9.5 2 8" rotation="0 90 0" visible="false"
+                >
+                <a-plane draw-text="text:右...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <!--左邊直走-->
+            <a-plane id="left2" fuse-button width="2" position="35 2 -2" rotation="0 0 0" visible="false"
+                >
+                <a-plane draw-text="text:右...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane id="left3" fuse-button width="2" position="50 2 -2" rotation="0 0 0" visible="false"
+                >
+                <a-plane draw-text="text:右...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane id="left4" fuse-button width="2" position="70 2 -2" rotation="0 0 0" visible="false"
+                >
+                <a-plane draw-text="text:右...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <!--左邊右轉-->
+            <a-plane id="left5" fuse-button width="3" position="32 2 5" rotation="0 -90 0" visible="false"
+                >
+                <a-plane draw-text="text:前進...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane id="left6" fuse-button width="3" position="46 2 16" rotation="0 90 0" visible="false"
+                >
+                <a-plane draw-text="text:前進...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            <a-plane id="left7" fuse-button width="3" position="68 2 5" rotation="0 -90 0" visible="false"
+                >
+                <a-plane draw-text="text:前進...？; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+
+    
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>
+
+<!--animation__enter="property: scale; to: 1.2 1.2 1.2; dur: 100; easing: linear; startEvents: mouseenter;"
+animation__leave="property: scale; to: 1 1 1; dur: 100; easing: linear; startEvents: mouseleave;"
+proxy-event="event:click; to: #walk1; as: walk_event"
+event-set="_event: walk_event; position: 9.5 2 24; _dur: 8000"
+event-set="_event: done; visible: false;"-->

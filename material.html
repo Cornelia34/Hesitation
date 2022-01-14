@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>材質組件</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="t1-color" src="images/Concrete_Wall_007_basecolor.jpg">
+            <img id="t1-normal" src="images/Concrete_Wall_007_normal.jpg">
+            <img id="t2-color" src="images/Metal_Floor_001_basecolor.jpg">
+            <img id="t2-normal" src="images/Metal_Floor_001_normal.jpg">
+            <img id="t3-color" src="images/Concrete_014_4K_COLOR.jpg">
+            <img id="t3-normal" src="images/Concrete_014_4K_NORM.jpg">
+            <img id="t4-color" src="images/Sci-fi_Floor_002_basecolor.jpg">
+            <img id="t4-normal" src="images/Sci-fi_Floor_002_normal.jpg">
+            <img id="envMap" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
+        </a-assets>
+
+        <a-sky src="#envMap"></a-sky>
+
+        <a-camera position="0 0 3"></a-camera>
+
+        <a-box position="-2 0 0" material="src: #t1-color; normalMap: #t1-normal; sphericalEnvMap: #envMap; metalness: 0.0; roughness: 0.8;"
+            animation__rotate="property: rotation; easing: linear; from: 0 0 0; to: 360 360 360; dur: 100000; loop: true;"
+        ></a-box>
+        <a-box position="0 0 0" material="src: #t2-color; normalMap: #t2-normal; sphericalEnvMap: #envMap; metalness: 1.0; roughness: 0.2"
+            animation__rotate="property: rotation; easing: linear; from: 0 0 0; to: 360 360 360; dur: 100000; loop: true;"
+        ></a-box>
+        <a-box position="2 0 0" material="src: #t3-color; normalMap: #t3-normal; sphericalEnvMap: #envMap; metalness: 0.0; roughness: 1.0"
+            animation__rotate="property: rotation; easing: linear; from: 0 0 0; to: 360 360 360; dur: 100000; loop: true;"
+        ></a-box>
+        <a-box position="4 0 0" material="src: #t4-color; normalMap: #t4-normal; sphericalEnvMap: #envMap; metalness: 0.8; roughness: 0.3;"
+            animation__rotate="property: rotation; easing: linear; from: 0 0 0; to: 360 360 360; dur: 100000; loop: true;"
+        ></a-box>
+        <a-box position="6 0 0" material="shader: flat; color: #0f0; src: #t2-color;"
+            animation__rotate="property: rotation; easing: linear; from: 0 0 0; to: 360 360 360; dur: 100000; loop: true;"
+        ></a-box>
+    </a-scene>
+</body>
+
+</html>

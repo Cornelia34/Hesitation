@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>移動攝影機</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="scripts/aframe-render-order-component.js"></script>
+    <script src="scripts/aframe-draw-shader.js"></script>
+    <script src="scripts/aframe-maze.js"></script>
+    <script src="scripts/aframe-move-to.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="city" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
+        </a-assets>
+
+        <a-sky src="#city"></a-sky>
+
+        <a-entity id="cam-rig">
+            <a-camera wasd-controls="enabled: false">
+                <a-cursor cursor="fuse: true; fuseTimeout: 1000" raycaster="objects: [raycastable=true]"></a-cursor>
+            </a-camera>
+        </a-entity>
+
+        <a-entity id="maze" rotation="0 90 0" maze="
+            map: 1111;
+            colors: #d24,#2d4,#ccc,#ccc,#24d,#24d;
+            sphericalEnvMap: #city;
+        "></a-entity>
+
+        <!-- click後讓#cam-rig從原來位置移動到(0, 0, -12)處，用時5秒，結束後傳遞done事件給text1，使其出現 -->
+        <a-plane fuse-button
+            width="4" position="0 2 -12" raycastable="true"
+            event-set="_event: click; raycastable: false; visible: false; _delay: 300;"
+            move-to="target: #cam-rig; position: 0 0 -12; time: 5; startEvent: click; onEndEvent: done;"
+            proxy-event="event: done; to: #text1;">
+            <a-plane draw-text="text:移動到這; color: #fff" position="0 0 0.02"></a-plane>
+        </a-plane>
+
+        <a-plane id="text1" draw-text="text:到了; color: #fff" position="0 2 -13.9" visible="false"
+            event-set="_event: done; visible: true;"
+        ></a-plane>
+
+    </a-scene>
+</body>
+
+</html>

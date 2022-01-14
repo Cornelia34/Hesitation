@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>猜硬幣</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="scripts/aframe-draw-shader.js"></script>
+    <script src="scripts/aframe-video-player.js"></script>
+    <script src="scripts/aframe-render-order-component.js"></script>
+    <script src="scripts/aframe-change-scene.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <video id="start" preload="auto" src="./videos/guess-coin-start.mp4" crossOrigin=""></video>
+            <video id="end1" preload="auto" src="./videos/guess-coin-end1.mp4" crossOrigin=""></video>
+            <video id="end2" preload="auto" src="./videos/guess-coin-end2.mp4" crossOrigin=""></video>
+        </a-assets>
+
+        <a-camera>
+            <a-cursor color="#fff" cursor="fuse: true; fuseTimeout: 1000" raycaster="objects: [visible=true] [raycastable=true]"></a-cursor>
+            <a-sky id="fadePanel" render-order="9999" radius="0.3" color="#000" material="transparent: true; opacity: 0.0;"
+                animation__fadeOut="property: material.opacity; startEvents: fadeOut; easing: linear; dur: 500; to: 1.0"
+                animation__fadeIn="property: material.opacity; startEvents: fadeIn; easing: linear; dur: 500; to: 0.0"></a-sky>
+        </a-camera>
+
+        <a-entity id="scene-start" scene visible="true">
+            <a-videosphere id="video-start" src="#start" video-player="playEvent: play-video; onEndEvent: ended;"
+                event-set="_event: play-video; visible: true;"
+                event-set__show-select-btn1="_event: ended; _target: #select-btn1; raycastable: true; visible: true;"
+                event-set__show-select-btn2="_event: ended; _target: #select-btn2; raycastable: true; visible: true;">
+            </a-videosphere>
+
+            <a-plane id="start-btn" fuse-button="color: #15031b; barColor: #d24; fuseTimeout: 1000;" width="3" position="0 0 -10"
+                raycastable="true" 
+                event-set__hide="_event: click; raycastable: false; visible: false; _delay: 300;"
+                proxy-event="event: click; as: play-video; to: #video-start;">
+                <a-plane draw-text="text:猜硬幣; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+
+            <a-plane id="select-btn1" fuse-button="color: #15031b; barColor: #d24; fuseTimeout: 1000;" width="3" position="-5 0 -10"
+                visible="false" raycastable="false"
+                event-set__hide="_event: click; raycastable: false; visible: false; _delay: 300;"
+                change-scene="event: click; to: #scene-end1; fadePanel: #fadePanel; onChangeEvent: play-video;"
+                proxy-event="event: play-video; to: #video-end1;">
+                <a-plane draw-text="text:人頭; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+            
+            <a-plane id="select-btn2" fuse-button="color: #15031b; barColor: #d24; fuseTimeout: 1000;" width="3" position="5 0 -10"
+                visible="false" raycastable="false"
+                event-set__hide="_event: click; raycastable: false; visible: false; _delay: 300;"
+                change-scene="event: click; to: #scene-end2; fadePanel: #fadePanel; onChangeEvent: play-video;"
+                proxy-event="event: play-video; to: #video-end2;">
+                <a-plane draw-text="text:數字; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+        </a-entity>
+
+        <a-entity id="scene-end1" scene visible="false">
+            <a-videosphere id="video-end1" src="#end1" video-player="playEvent: play-video; onEndEvent: ended;"
+                event-set__show-restart-btn="_event: ended; _target: #restart-btn1; raycastable: true; visible: true;">
+            </a-videosphere>
+
+            <a-plane id="restart-btn1" fuse-button="color: #15031b; barColor: #d24; fuseTimeout: 1000;" width="7" position="0 0 -10"
+                visible="false" raycastable="false"
+                event-set__hide="_event: click; raycastable: false; visible: false; _delay: 300;"
+                event-set__hide-select-btn1="_event: click; _target: #select-btn1; raycastable: false; visible: false;"
+                event-set__hide-select-btn2="_event: click; _target: #select-btn2; raycastable: false; visible: false;"
+                change-scene="event: click; to: #scene-start; fadePanel: #fadePanel; onChangeEvent: play-video;"
+                proxy-event="event: play-video; to: #video-start;">
+                <a-plane draw-text="text:猜錯了！重試一次; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+        </a-entity>
+
+        <a-entity id="scene-end2" scene visible="false">
+            <a-videosphere id="video-end2" src="#end2" video-player="playEvent: play-video; onEndEvent: ended;"
+                event-set__show-restart-btn="_event: ended; _target: #restart-btn2; raycastable: true; visible: true;">
+            </a-videosphere>
+
+            <a-plane id="restart-btn2" fuse-button="color: #15031b; barColor: #d24; fuseTimeout: 1000;" width="7" position="0 0 -10"
+                visible="false" raycastable="false"
+                event-set__hide="_event: click; raycastable: false; visible: false; _delay: 300;"
+                event-set__hide-select-btn1="_event: click; _target: #select-btn1; raycastable: false; visible: false;"
+                event-set__hide-select-btn2="_event: click; _target: #select-btn2; raycastable: false; visible: false;"
+                change-scene="event: click; to: #scene-start; fadePanel: #fadePanel; onChangeEvent: play-video;"
+                proxy-event="event: play-video; to: #video-start;">
+                <a-plane draw-text="text:猜錯了！重試一次; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+        </a-entity>
+
+
+        
+
+        
+
+        
+
+        
+    </a-scene>
+</body>
+
+</html>
